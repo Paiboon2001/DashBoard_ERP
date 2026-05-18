@@ -230,12 +230,12 @@ function ActionTable() {
       </div>
       <table className="s-table fixed">
         <colgroup>
-          <col style={{ width: '16.66%' }} />
-          <col style={{ width: '16.66%' }} />
-          <col style={{ width: '16.66%' }} />
-          <col style={{ width: '16.66%' }} />
-          <col style={{ width: '16.66%' }} />
-          <col style={{ width: '16.66%' }} />
+          <col style={{ width: '350px' }} />
+          <col />
+          <col />
+          <col />
+          <col />
+          <col />
         </colgroup>
         <thead>
           <tr>
