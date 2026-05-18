@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import '../sales.css'
 import {
   salesHeader,
@@ -329,6 +329,79 @@ function ActionTable() {
 
 const YEARS = [2566, 2567, 2568, 2569, 2570]
 
+function YearSelect({ value, onChange }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  useEffect(() => {
+    const onDoc = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [])
+  return (
+    <div className="s-dd" ref={ref}>
+      <button
+        type="button"
+        className="s-btn s-dd-btn"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span>ปี {value}</span>
+        <svg
+          className={`s-dd-caret${open ? ' open' : ''}`}
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M6 9L12 15L18 9"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      {open && (
+        <ul className="s-dd-menu" role="listbox">
+          {YEARS.map((y) => (
+            <li
+              key={y}
+              role="option"
+              aria-selected={y === value}
+              className={`s-dd-opt${y === value ? ' sel' : ''}`}
+              onClick={() => {
+                onChange(y)
+                setOpen(false)
+              }}
+            >
+              <span>ปี {y}</span>
+              {y === value && (
+                <svg
+                  className="s-dd-check"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <path
+                    d="M5 13l4 4L19 7"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 export default function SalesDashboard() {
   const [year, setYear] = useState(2569)
   return (
@@ -340,17 +413,7 @@ export default function SalesDashboard() {
             <div className="s-subtitle">{salesHeader.subtitle}</div>
           </div>
           <div className="s-head-actions">
-            <select
-              className="s-btn s-year"
-              value={year}
-              onChange={(e) => setYear(Number(e.target.value))}
-            >
-              {YEARS.map((y) => (
-                <option key={y} value={y}>
-                  ปี {y}
-                </option>
-              ))}
-            </select>
+            <YearSelect value={year} onChange={setYear} />
             <button className="s-btn primary">
               <svg
                 className="s-btn-ic"
